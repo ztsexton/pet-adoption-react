@@ -1,21 +1,21 @@
-import { useState, useEffect } from "react";
-import useBreedList from "./useBreedList";
-import Pet from "./Pet";
+import { useState, useEffect } from 'react';
+import useBreedList from './useBreedList';
+import Results from './Results';
 
-const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
+const ANIMALS = ['bird', 'cat', 'dog', 'rabbit', 'reptile'];
 
 const SearchParams = () => {
   // const location = "Washington, DC";
-  const [location, setLocation] = useState("");
-  const [animal, setAnimal] = useState("");
-  const [breed, setBreed] = useState("");
+  const [location, setLocation] = useState('');
+  const [animal, setAnimal] = useState('');
+  const [breed, setBreed] = useState('');
   const [breeds] = useBreedList(animal);
 
   const [pets, setPets] = useState([]);
 
   useEffect(() => {
     requestPets();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function requestPets() {
     const res = await fetch(
@@ -28,7 +28,12 @@ const SearchParams = () => {
 
   return (
     <div className="search-params">
-      <form>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          requestPets();
+        }}
+      >
         <label htmlFor="location">
           Location {location}
           <input
@@ -45,11 +50,11 @@ const SearchParams = () => {
             value={animal}
             onChange={(e) => {
               setAnimal(e.target.value);
-              setBreed("");
+              setBreed('');
             }}
             onBlur={(e) => {
               setAnimal(e.target.value);
-              setBreed("");
+              setBreed('');
             }}
           >
             <option />
@@ -78,14 +83,7 @@ const SearchParams = () => {
         </label>
         <button>Submit</button>
       </form>
-      {pets.map((pet) => (
-        <Pet
-          name={pet.name}
-          animal={pet.animal}
-          breed={pet.breed}
-          key={pet.id}
-        />
-      ))}
+      <Results pets={pets} />
     </div>
   );
 };
