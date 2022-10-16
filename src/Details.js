@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import { useParams } from 'react-router-dom';
 import Carousel from './Carousel';
+import ErrorBoundary from './ErrorBoundary';
+import ThemeContext from './ThemeContext';
 
 class Details extends Component {
   //   constructor(props) {
@@ -37,7 +39,15 @@ class Details extends Component {
           <h2>
             {animal} - {breed} - {city}, {state}
           </h2>
-          <button>Adopt {name}</button>
+          <ThemeContext.Consumer>
+            {([theme]) => (
+              <button style={{ backgroundColor: theme }}>Adopt {name}</button>
+            )}
+          </ThemeContext.Consumer>
+          {/* above is how you used to have to do it. Still may have to I guess. You can use the hooks in the wrappeDetail component
+          and just pass that into Details rather than using this ugly thing */}
+          {/* <button>Adopt {name}</button> */}
+
           <p>{description}</p>
         </div>
       </div>
@@ -48,7 +58,11 @@ class Details extends Component {
 const WrappedDetails = () => {
   const params = useParams();
 
-  return <Details params={params} />;
+  return (
+    <ErrorBoundary>
+      <Details params={params} />
+    </ErrorBoundary>
+  );
 };
 
 export default WrappedDetails;
