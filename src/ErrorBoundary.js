@@ -12,7 +12,7 @@ class ErrorBoundary extends Component {
     console.error(error, info);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate() { //useeffect runs when component loads, this does not. useeffect triggers when whatever state that it's watching is changed. This is any state change
     if (this.state.hasError) {
       setTimeout(() => this.setState({ redirect: true }), 5000);
     }
